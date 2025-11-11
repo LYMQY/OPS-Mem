@@ -6,6 +6,13 @@ The above definition can be mapped to a five-element consisting of ``Variables, 
 
 five_description_simple = "The five-element model is the abstraction of an optimization problem, which transforms specific problem scenarios into formal mathematical problems. You need to write the corresponding Pyomo code based on the five-element model provided. "
 
+five_description_gurobi = "The five-element model is the abstraction of an optimization problem, which transforms specific problem scenarios into formal mathematical problems. You need to write the corresponding Gurobi code based on the five-element model provided. "
+
+five_description_copt = "The five-element model is the abstraction of an optimization problem, which transforms specific problem scenarios into formal mathematical problems. You need to write the corresponding COPT code based on the five-element model provided. "
+
+five_description_ortools = "The five-element model is the abstraction of an optimization problem, which transforms specific problem scenarios into formal mathematical problems. You need to write the corresponding OR-Tools code based on the five-element model provided. "
+
+
 ques_description_code = """You need to write the corresponding Pyomo code based on the problem description and information provided. 
 The problem description is as follows: 
 """
@@ -37,6 +44,27 @@ five_suffix = """Please write the corresponding five-element model. Please use L
 """
 
 code_suffix = """Please write the corresponding Pyomo code. Please add `from pyomo.environ import *` at the beginning of your code (You can add other `import` as well). Please print the optimal solution and the value of the objective function. Please do not output the running log. You need to write it in the form of a class and add a main function: 
+
+```python
+[write your code here]
+```
+"""
+
+code_gurobi = """Please write the corresponding Gurobi code. Please add `from gurobipy import *` at the beginning of your code (You can add other `import` as well). Please print the optimal solution and the value of the objective function. Please do not output the running log. You need to write it in the form of a class and add a main function: 
+
+```python
+[write your code here]
+```
+"""
+
+code_copt = """Please write the corresponding COPT code. Please add `from coptpy import *` at the beginning of your code (You can add other `import` as well). Please print the optimal solution and the value of the objective function. Please do not output the running log. You need to write it in the form of a class and add a main function: 
+
+```python
+[write your code here]
+```
+"""
+
+code_ortools = """Please write the corresponding OR-Tools code. Please add `from ortools import *` at the beginning of your code (You can add other `import` as well). Please print the optimal solution and the value of the objective function. Please do not output the running log. You need to write it in the form of a class and add a main function: 
 
 ```python
 [write your code here]
@@ -75,3 +103,18 @@ def QF2C(ques, five):
 def F2C(five):
     five = bound_symbol + five + bound_symbol
     return five_description_simple + five_description_code + five + code_suffix
+
+# generate Gurobi code from five-element
+def F2G(five):
+    five = bound_symbol + five + bound_symbol
+    return five_description_gurobi + five_description_code + five + code_gurobi
+
+# generate OR-Tools code from five-element
+def F2O(five):
+    five = bound_symbol + five + bound_symbol
+    return five_description_ortools + five_description_code + five + code_ortools
+
+# generate COPT code from five-element
+def F2CO(five):
+    five = bound_symbol + five + bound_symbol
+    return five_description_copt + five_description_code + five + code_copt
