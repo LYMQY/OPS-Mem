@@ -4,6 +4,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import json
 import os
+from tqdm import tqdm
 import time
 
 load_dotenv()
@@ -97,25 +98,55 @@ with open("data/aug_data.jsonl", "r", encoding="utf-8") as file:
     for line in file:
         data = json.loads(line.strip())
         questions.append(data['question'])
-question = questions[0]
-five_elem = infer_five_elem(question)
-time.sleep(4)
-code_str = infer_code(five_elem)
-time.sleep(10)
-code_gurobi = infer_codeG(five_elem)
-time.sleep(10)
-code_copt = infer_codeC(five_elem)
-time.sleep(10)
-code_ortools = infer_codeO(five_elem)
-#out_log, err_log = test_code(code_str)
-print("----- OUTPUT -----")
-print(five_elem)
-print("----- PYOMO CODE -----")
-print(code_str)
-print("----- GUROBI CODE -----")
-print(code_gurobi)
-print("----- COPT CODE -----")
-print(code_copt)
-print("----- OR-TOOLS CODE -----")
-print(code_ortools)
+
+aug_data_path = "data/aug_data_q2f2c.jsonl"
+
+questions = questions[33:]
+
+# 使用tqdm创建进度条
+with tqdm(total=len(questions), desc="处理问题", unit="question") as pbar:
+    for idx, question in enumerate(questions):
+        
+        pbar.set_description(f"[QUES {idx}]")
+
+        five_elem = infer_five_elem(question)
+        
+        code_ortools = infer_codeO(five_elem)
+        
+        new_data = {
+            "question": question,
+            "five_elem": five_elem,
+            "code_ortools": code_ortools
+        }
+        
+        with open(aug_data_path, 'a', encoding='utf-8') as file:
+            json_data = json.dumps(new_data)
+            file.write(json_data + '\n')
+        
+        # 更新进度条
+        pbar.update(1)
+            
+        # 每处理完一个问题后等待4秒
+        time.sleep(4)
+# question = questions[0]
+# five_elem = infer_five_elem(question)
+# time.sleep(4)
+# code_str = infer_code(five_elem)
+# time.sleep(10)
+# code_gurobi = infer_codeG(five_elem)
+# time.sleep(10)
+# code_copt = infer_codeC(five_elem)
+# time.sleep(10)
+# code_ortools = infer_codeO(five_elem)
+# #out_log, err_log = test_code(code_str)
+# print("----- OUTPUT -----")
+# print(five_elem)
+# print("----- PYOMO CODE -----")
+# print(code_str)
+# print("----- GUROBI CODE -----")
+# print(code_gurobi)
+# print("----- COPT CODE -----")
+# print(code_copt)
+# print("----- OR-TOOLS CODE -----")
+# print(code_ortools)
 #print(out_log)

@@ -18,7 +18,7 @@ from pathlib import Path
 import time
 
 # 日志配置
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("DualClusterMemorySystem")
 
 class MemoryNode:
@@ -34,7 +34,7 @@ class MemoryNode:
                  timestamp: Optional[str] = None):
         """初始化记忆节点，存储问题-模型-代码全流程信息"""
         # 基础标识
-        self.id = id or str(uuid.uuid4())  # 唯一ID
+        self.id = id or "Q" + str(uuid.uuid4())[-4:]  # 唯一ID
         self.timestamp = timestamp or datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 创建时间
         self.status = "pending"  # 状态：pending(待整合)/integrated(已整合)
 
@@ -192,34 +192,35 @@ class DualClusterMemorySystem:
                     modeling_cluster_id = model_results["ids"][0][0]
                     # 获取簇元数据并更新典型案例列表
                     cluster_metadata = model_results["metadatas"][0][0]
-                    updated_node_ids = cluster_metadata["典型案例"] + [node.id]
+                    updated_node_ids = cluster_metadata["cases"] + [node.id]
+                    cluster_summary = self._generate_modeling_cluster_summary(cluster_metadata=cluster_metadata, modeling_logic=node.modeling_logic)
                     # 重新添加簇（更新元数据）
                     self.model_retriever.delete_document(modeling_cluster_id)
                     self.model_retriever.add_cluster(
-                        cluster=cluster_metadata["簇中心"],  # 保持原簇中心总结
+                        cluster=cluster_summary["center"],  # 更新原簇中心总结
                         metadata={
                             "type": "modeling",
-                            "簇中心": cluster_metadata["簇中心"],
-                            "模式详细总结": cluster_metadata["模式详细总结"],
-                            "典型案例": updated_node_ids
+                            "center": cluster_summary["center"],
+                            "pattern_summary": cluster_summary["pattern_summary"],
+                            "cases": updated_node_ids
                         },
                         cluster_id=modeling_cluster_id
                     )
-            elif modeling_cluster_id == None:
+            if modeling_cluster_id == None:
                     # 相似度不达标：创建新簇（生成簇中心和模式总结）
-                    modeling_cluster_id = str(uuid.uuid4())
+                    modeling_cluster_id = "M" +str(uuid.uuid4())[-4:]
                     # 调用LLM生成簇中心总结和模式详细描述
-                    cluster_summary = self._generate_modeling_cluster_summary(node.modeling_logic)
+                    cluster_summary = self._generate_modeling_cluster_summary(cluster_metadata=None, modeling_logic=node.modeling_logic)
                     # 生成簇中心的抽象嵌入（用于后续簇间匹配）
-                    cluster_embedding = self._generate_embeddings(cluster_summary["簇中心"])
+                    cluster_embedding = self._generate_embeddings(cluster_summary["center"])
                     # 存入新簇
                     self.model_retriever.add_cluster(
-                        cluster=cluster_summary["簇中心"],  # 用簇中心总结作为检索文本
+                        cluster=cluster_summary["center"],  # 用簇中心总结作为检索文本
                         metadata={
                             "type": "modeling",
-                            "簇中心": cluster_summary["簇中心"],
-                            "模式详细总结": cluster_summary["模式详细总结"],
-                            "典型案例": [node.id]  # 初始典型案例为当前节点
+                            "center": cluster_summary["center"],
+                            "pattern_summary": cluster_summary["pattern_summary"],
+                            "cases": [node.id]  # 初始典型案例为当前节点
                         },
                         cluster_id=modeling_cluster_id
                     )
@@ -240,56 +241,84 @@ class DualClusterMemorySystem:
                     # 相似度达标：分配已有簇ID，更新典型案例
                     implementation_cluster_id = impl_results["ids"][0][0]
                     cluster_metadata = impl_results["metadatas"][0][0]
-                    updated_node_ids = cluster_metadata["典型案例"] + [node.id]
+                    cluster_summary = self._generate_implementation_cluster_summary(cluster_metadata=cluster_metadata, full_code=node.full_code)
+                    updated_node_ids = cluster_metadata["cases"] + [node.id]
                     # 重新添加簇（更新元数据）
                     self.implementation_retriever.delete_document(implementation_cluster_id)
                     self.implementation_retriever.add_cluster(
-                        cluster=cluster_metadata["簇中心"],
+                        cluster=cluster_summary["center"],
                         metadata={
                             "type": "implementation",
-                            "簇中心": cluster_metadata["簇中心"],
-                            "模式详细总结": cluster_metadata["模式详细总结"],
-                            "典型案例": updated_node_ids
+                            "center": cluster_summary["center"],
+                            "pattern_summary": cluster_summary["pattern_summary"],
+                            "cases": updated_node_ids
                         },
                         cluster_id=implementation_cluster_id
                     )
-            elif implementation_cluster_id == None:
+            if implementation_cluster_id == None:
                     # 相似度不达标：创建新簇（生成簇中心和模式总结）
-                    implementation_cluster_id = str(uuid.uuid4()) 
+                    implementation_cluster_id = "B" + str(uuid.uuid4())[-4:] 
                     # 调用LLM生成代码实现的簇总结
-                    cluster_summary = self._generate_implementation_cluster_summary(node.full_code)
+                    cluster_summary = self._generate_implementation_cluster_summary(cluster_metadata=None, full_code=node.full_code)
                     # 生成簇中心的抽象嵌入
-                    cluster_embedding = self._generate_embeddings(cluster_summary["簇中心"])
+                    cluster_embedding = self._generate_embeddings(cluster_summary["center"])
                     # 存入新簇
                     self.implementation_retriever.add_cluster(
-                        cluster=cluster_summary["簇中心"],
+                        cluster=cluster_summary["center"],
                         metadata={
                             "type": "implementation",
-                            "簇中心": cluster_summary["簇中心"],
-                            "模式详细总结": cluster_summary["模式详细总结"],
-                            "典型案例": [node.id]
+                            "center": cluster_summary["center"],
+                            "pattern_summary": cluster_summary["pattern_summary"],
+                            "cases": [node.id]
                         },
                         cluster_id=implementation_cluster_id
                     )
                     # 存储簇中心嵌入
                     node.implementation_cluster_embedding = cluster_embedding
+        
+        if modeling_cluster_id is None:
+            logger.info(f"节点{node.id}未分配建模簇, 建模逻辑为：{node.modeling_logic}")
+        
+        if implementation_cluster_id is None:
+            logger.info(f"节点{node.id}未分配实现簇, 实现代码为：{node.full_code}")
 
         return modeling_cluster_id, implementation_cluster_id
 
     # 新增：生成建模簇的中心总结和模式描述
-    def _generate_modeling_cluster_summary(self, modeling_logic: str) -> Dict[str, str]:
+    def _generate_modeling_cluster_summary(self, cluster_metadata: Optional[dict[str, str]], modeling_logic: str) -> Dict[str, str]:
         """用LLM抽象建模逻辑，生成簇中心和模式详细总结"""
-        prompt = f"""
+        
+        if cluster_metadata is not None:
+            prompt = f"""
         请分析以下建模逻辑，生成结构化的簇特征：
-        1. 簇中心：1句话总结核心建模思路（如“车辆路径问题的网络流模型”）；
+        1. 簇中心：总结核心建模思路（如“车辆路径问题的网络流模型”）；
+        2. 模式详细总结：分点描述适用场景、核心变量、必须约束、可选扩展。
+        
+        建模逻辑：{modeling_logic}
+        
+        已有簇信息：
+        簇中心：{cluster_metadata.get("center", "未知")}
+        模式详细总结：{cluster_metadata.get("pattern_summary", "未知")}
+
+        输出格式：
+        {{
+            "center": "核心建模思路总结",
+            "pattern_summary": "适用：...\\n核心：...\\n必须包含：...\\n可选扩展：..."
+        }}            
+        """
+        else:
+
+            prompt = f"""
+        请分析以下建模逻辑，生成结构化的簇特征：
+        1. 簇中心：总结核心建模思路（如“车辆路径问题的网络流模型”）；
         2. 模式详细总结：分点描述适用场景、核心变量、必须约束、可选扩展。
         
         建模逻辑：{modeling_logic}
         
         输出格式：
         {{
-            "簇中心": "核心建模思路总结",
-            "模式详细总结": "适用：...\\n核心：...\\n必须包含：...\\n可选扩展：..."
+            "center": "核心建模思路总结",
+            "pattern_summary": "适用：...\\n核心：...\\n必须包含：...\\n可选扩展：..."
         }}
         """
         try:
@@ -300,24 +329,42 @@ class DualClusterMemorySystem:
         except Exception as e:
             logger.error(f"建模簇总结生成失败：{e}")
             return {
-                "簇中心": "未分类建模逻辑",
-                "模式详细总结": f"适用：未知场景\\n核心：{modeling_logic[:50]}...\\n必须包含：无\\n可选扩展：无"
+                "center": "未分类建模逻辑",
+                "pattern_summary": f"适用：未知场景\\n核心：{modeling_logic[:50]}...\\n必须包含：无\\n可选扩展：无"
             }
 
     # 新增：生成实现簇的中心总结和模式描述
-    def _generate_implementation_cluster_summary(self, full_code: str) -> Dict[str, str]:
+    def _generate_implementation_cluster_summary(self, cluster_metadata: Optional[dict[str, str]],full_code: str) -> Dict[str, str]:
         """用LLM抽象代码实现，生成簇中心和模式详细总结"""
-        prompt = f"""
+        if cluster_metadata is not None:
+            prompt = f"""
         请分析以下代码实现，生成结构化的簇特征：
-        1. 簇中心：1句话总结代码风格和技术栈（如“Python+Gurobi的字典式变量管理”）；
+        1. 簇中心：总结代码风格和技术栈（如“Python+Gurobi的字典式变量管理”）；
+        2. 模式详细总结：分点描述技术栈、代码风格、适用规模、性能特点。
+
+        代码实现：{full_code}
+
+        已有信息：
+        簇中心：{cluster_metadata.get("center", "未知")}
+        模式详细总结：{cluster_metadata.get("pattern_summary", "未知")}
+        输出格式：
+        {{
+            "center": "代码实现风格总结",
+            "pattern_summary": "技术栈：...\\n代码风格：...\\n适用场景：...\\n性能：..."
+        }}            
+        """
+        else:
+            prompt = f"""
+        请分析以下代码实现，生成结构化的簇特征：
+        1. 簇中心：总结代码风格和技术栈（如“Python+Gurobi的字典式变量管理”）；
         2. 模式详细总结：分点描述技术栈、代码风格、适用规模、性能特点。
         
         代码实现：{full_code}
         
         输出格式：
         {{
-            "簇中心": "代码实现风格总结",
-            "模式详细总结": "技术栈：...\\n代码风格：...\\n适用场景：...\\n性能：..."
+            "center": "代码实现风格总结",
+            "pattern_summary": "技术栈：...\\n代码风格：...\\n适用场景：...\\n性能：..."
         }}
         """
         try:
@@ -328,11 +375,11 @@ class DualClusterMemorySystem:
         except Exception as e:
             logger.error(f"实现簇总结生成失败：{e}")
             return {
-                "簇中心": "未分类代码实现",
-                "模式详细总结": f"技术栈：未知\\n代码风格：{full_code[:50]}...\\n适用场景：未知\\n性能：未知"
+                "center": "未分类代码实现",
+                "pattern_summary": f"技术栈：未知\\n代码风格：{full_code[:50]}...\\n适用场景：未知\\n性能：未知"
             }
 
-    def add_note(self, content: str, time: str = None, **kwargs) -> str:
+    def add_note(self, content: str = None, time: str = None, **kwargs) -> str:
         """Add a new memory note：LLM补全字段→分配双簇→存入检索器→计数演化"""
         # Create MemoryNote without llm_controller
         if time is not None:
@@ -343,7 +390,7 @@ class DualClusterMemorySystem:
         needs_analysis = (
             node.problem_description == "General Problem" or  # problem_description is empty
             node.modeling_logic == "General Modeling Logic" or  # modeling_logic is default value
-            node.key_constraint_snippets == "General Key Constraint Snippets" or  # key_constraint_snippets is default value
+            # node.key_constraint_snippets == "General Key Constraint Snippets" or  # key_constraint_snippets is default value
             node.full_code == "General Full Code"  # full_code is default value
         )
         
@@ -510,54 +557,44 @@ class DualClusterMemorySystem:
         """
         return self.memories.get(memory_id)
 
-    def find_related_memories(self, query: str, k: int = 5, cluster_type: str = "all") -> Tuple[str, List[str]]:
+    def find_related_memories(self, query: str, k: int = 2, cluster_type: str = "all") -> Tuple[List[Dict[str, str]], List[str]]:
         """检索相似记忆：支持全量/建模簇/实现簇检索"""
         if not self.memories:
-            return "", []
+            return [], []
 
         try:
             # 选择检索器（all: 全量，model: 建模簇，implementation: 实现簇）
+            memory_str = []
             if cluster_type == "model":
                 results = self.model_retriever.search(query=query, k=k)
                 # 建模簇返回的是簇ID，需映射到关联的节点ID
                 node_ids = []
-                for i, cluster_id in enumerate(results["ids"][0]):
+                for i, _ in enumerate(results["ids"][0]):
                     metadata = results["metadatas"][0][i]
-                    node_ids.extend(metadata.get("related_node_ids", []))
-                results["ids"][0] = node_ids[:k]  # 取前k个节点ID
+                    memory_str.append({
+                        "cluster_id": results["ids"][0][i],
+                        "center": metadata.get("center", ""),
+                        "pattern_summary": metadata.get("pattern_summary", "")
+                    })
+                    node_ids.append(metadata.get("cases", [])[0])
+                related_ids = node_ids  # 取前k个节点ID
             elif cluster_type == "implementation":
                 results = self.implementation_retriever.search(query=query, k=k)
                 # 实现簇同理，映射到节点ID
                 node_ids = []
-                for i, cluster_id in enumerate(results["ids"][0]):
+                for i, _ in enumerate(results["ids"][0]):
                     metadata = results["metadatas"][0][i]
-                    node_ids.extend(metadata.get("related_node_ids", []))
-                results["ids"][0] = node_ids[:k]
+                    memory_str.append({
+                        "cluster_id": results["ids"][0][i],
+                        "center": metadata.get("center", ""),
+                        "pattern_summary": metadata.get("pattern_summary", "")
+                    })
+                    node_ids.append(metadata.get("cases", [])[0])
+                related_ids = node_ids
             else:
                 results = self.full_retriever.search(query=query, k=k)
-
-            # 格式化检索结果
-            memory_str = ""
-            related_ids = []
-            for i, node_id in enumerate(results["ids"][0]):
-                node = self.memories.get(node_id)
-                if not node:
-                    continue
-                # 更新检索次数
-                node.retrieval_count += 1
-                self.memories[node_id] = node  # 保存更新后的检索次数
-                
-                # 格式化输出信息
-                memory_str += (
-                    f"记忆ID: {node.id}\n"
-                    f"问题描述: {node.problem_description[:100]}...\n"
-                    f"建模逻辑: {node.modeling_logic[:100]}...\n"
-                    f"所属建模簇: {node.modeling_cluster_id}\n"
-                    f"所属实现簇: {node.implementation_cluster_id}\n"
-                    f"检索次数: {node.retrieval_count}\n"
-                    f"-------------------------\n"
-                )
-                related_ids.append(node_id)
+                related_ids = results["ids"][0]
+            
             
             return memory_str, related_ids
         except Exception as e:
@@ -757,7 +794,8 @@ class DualClusterMemorySystem:
 
     def search(self, query: str, k: int = 5, cluster_type: str = "all") -> List[Dict[str, Any]]:
         """结构化检索接口：返回包含节点详情的字典列表"""
-        _, related_ids = self.find_related_memories(query, k=k, cluster_type=cluster_type)
+        memory_str, related_ids = self.find_related_memories(query, k=k, cluster_type=cluster_type)
+        
         results = []
         
         for node_id in related_ids[:k]:
@@ -775,6 +813,16 @@ class DualClusterMemorySystem:
                 "retrieval_count": node.retrieval_count,
                 "timestamp": node.timestamp,
                 "status": node.status
+            })
+        
+        if cluster_type == "model":
+            results.append({
+                "modeling_clusters": memory_str
+            })
+        
+        elif cluster_type == "implementation":
+            results.append({
+                "implementation_clusters": memory_str
             })
         
         return results

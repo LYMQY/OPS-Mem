@@ -18,7 +18,7 @@ class ChromaRetriever:
         Args:
             collection_name: Name of the ChromaDB collection
         """
-        self.client = chromadb.Client(Settings(allow_reset=True, telemetry_enabled=False))
+        self.client = chromadb.Client(Settings(allow_reset=True))
         self.embedding_function = SentenceTransformerEmbeddingFunction(model_name=model_name)
         self.collection = self.client.get_or_create_collection(name=collection_name,embedding_function=self.embedding_function)
 
