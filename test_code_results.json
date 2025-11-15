@@ -1,0 +1,122 @@
+[
+    {
+        "index": 1,
+        "question": "You want to sell a kind of item in order to maximize your profit. Market research tells you that if you set the price at $1.50, you will be able to sell 5000 items, and for every 10 cents you lower the price below $1.50 you will be able to sell another 1000 items. You can only reduce the price by a multiple of 10 cents. Suppose that your fixed costs ( “start-up costs” ) total $2000, and the per item cost of production ( “marginal cost” ) is $0.50. Find the price to set per item and the number of items sold in order to maximize profit, and also determine the maximum profit you can get.",
+        "answer": 3600,
+        "code_ans": "----------\r\nBest Price per Item: $1.25\r\nNumber of Items Sold: 7500\r\nMaximum Profit: $3625.00\r\n"
+    },
+    {
+        "index": 7,
+        "question": "A logistics company is managing the distribution of three types of goods: GoodsX, GoodsY, and GoodsZ. The company needs to decide how many trucks to allocate for each type of good and how much to invest in route optimization software to optimize delivery efficiency and minimize costs. The relationship between investment in optimization and cost reduction for each type of good is given in the following Table.\n\n| Goods | Initial Cost per Truck | Cost Reduction per $100 Investment |\n|-------|------------------------|-----------------------------------|\n| GoodsX | $1,000                 | $10                               |\n| GoodsY | $1,200                 | $12                               |\n| GoodsZ | $1,500                 | $15                               |\n\nThe company has a total of 50 trucks available for allocation. The budget for route optimization software is $10,000. Due to contractual obligations, the company must allocate at least 10 trucks for GoodsX and 15 trucks for GoodsY. The company wants to ensure that the total investment in optimization does not exceed the total cost savings from using the software. The company aims to minimize the total delivery cost for all goods.\n",
+        "answer": 18000,
+        "code_ans": "----------\r\nTrucks allocated to GoodsX: 10.0\r\nTrucks allocated to GoodsY: 15.0\r\nTrucks allocated to GoodsZ: 0.0\r\nOptimal investment in optimization: $0.0\r\nMinimum Total Delivery Cost: $28000.0\r\n"
+    },
+    {
+        "index": 5,
+        "question": "There are six cities (cities 1-6) in Kilroy County. The county must determine where to build fire stations. The county wants to build the minimum number of fire stations needed to ensure that at least one fire station is within 15 minutes (driving time) of each city. The times (in minutes) required to drive between the cities in Kilroy County are shown in Table 6: \nTime Required to Travel between Cities in Kilroy County, \nFrom City 1 to ctiy 1-6 are 0 10 20 30 30 20; \nFrom City 2 to ctiy 1-6 are 10 0 25 35 20 10;  \nFrom City 3 to ctiy 1-6 are 20 25 0 15 30 20; \nFrom City 4 to ctiy 1-6 are 30 35 15 0 15 25; \nFrom City 5 to ctiy 1-6 are 30 20 30 15 0 14; \nFrom City 5 to ctiy 1-6 are 20 10 20 25 14 0. \nFormulate an linear problem that will tell Kilroy how many fire stations should be built and where they should be located.",
+        "answer": 0,
+        "code_ans": "----------\r\nOptimal solution found!\r\nFire station in city 1: No\r\nFire station in city 2: Yes\r\nFire station in city 3: No\r\nFire station in city 4: Yes\r\nFire station in city 5: No\r\nFire station in city 6: No\r\nTotal number of fire stations: 2.0\r\n"
+    },
+    {
+        "index": 9,
+        "question": "Of all rectangles of area 100, which has the smallest perimeter?",
+        "answer": 40,
+        "code_ans": ""
+    },
+    {
+        "index": 10,
+        "question": "A golf course is hosting an event and can transport guests using either golf carts or pull carts. A golf cart can take 4 guests while a pull cart can take 1 guest. Since golf carts take up a lot of space, at most 60% of carts can be golf carts. If the golf course needs to transport at least 80 guests, how many of each cart should be used to minimize the total number of carts needed?",
+        "answer": 29,
+        "code_ans": "----------\r\nNumber of Golf Carts: 17.0\r\nNumber of Pull Carts: 12.0\r\nMinimum Total Carts: 29.0\r\n"
+    },
+    {
+        "index": 11,
+        "question": "To graduate from Basketweavers University with a major in operations research, a student must complete at least two math courses, at least two OR courses, and at least two computer courses. Some courses can be used to fulfill more than one requirement: Calculus can fulfill the math requirement; operations research, math and OR requirements; data structures, computer and math requirements; business statistics, math and OR requirements; computer simulation, OR and computer requirements; introduction to computer programming, computer requirement; and forecasting, OR and math requirements. Some courses are prerequisites for others: Calculus is a prerequisite for business statistics; introduction to computer programming is a prerequisite for computer simulation and for data structures; and business statistics is a prerequisite for forecasting. Minimizes the number of courses needed to satisfy the major requirements.",
+        "answer": 4,
+        "code_ans": "Minimal number of courses needed: inf\r\nBest combination of courses: []\r\n"
+    },
+    {
+        "index": 12,
+        "question": "A man on a strict diet only drinks meal replacement drinks from two brands, alpha and omega. The alpha brand drink contains 30 grams of protein, 20 grams of sugar, and 350 calories per bottle. The omega brand drink contains 20 grams of protein, 15 grams of sugar, and 300 calories per bottle. The man wants to get at least 100 grams of protein and 2000 calories. In addition, because the omega brand drink contains tiny amounts of caffeine, at most 35% of the drink should be omega brand. How many bottles of each should he drink to minimize his sugar intake?",
+        "answer": 110,
+        "code_ans": "----------\r\nNumber of Alpha drinks: 4.0\r\nNumber of Omega drinks: 2.0\r\nMinimum Sugar Intake: 110.0 grams\r\n"
+    },
+    {
+        "index": 13,
+        "question": "A fashion company sells regular handbags and premium handbags made of higher quality material. They can sell regular handbags at a profit of $30 each and premium handbags at a profit of $180 each. The total monthly cost of manufacturing is $200 per regular handbag and $447 per premium handbag. The company has a total budget of $250000 and can sell at most 475 handbags of either type per month. How many of each handbag should they sell to maximize its monthly profit?",
+        "answer": 85500,
+        "code_ans": "----------\r\nNumber of regular handbags: 188.0\r\nNumber of premium handbags: 475.0\r\nMaximized Monthly Profit:  91140.0\r\n"
+    },
+    {
+        "index": 16,
+        "question": "A smoothie shop has a promotion for their two smoothies; an acai berry smoothie and a banana chocolate smoothie. It takes 7 units of acai berries and 3 units of water to make the acai berry smoothie. It takes 6 units of banana chocolate and 4 units of water to make the banana chocolate smoothie. Banana chocolate smoothies are more popular and thus the number of banana chocolate smoothies made must be more than the number of acai berry smoothies made. However, the acai berry smoothies have a loyal customer base, and at least 35% of the smoothies made must be acai berry smoothies. If the smoothie shop has 3500 units of acai berries and 3200 units of banana chocolate, to reduce the total amount of water, how many of each smoothie type should be made?",
+        "answer": 18,
+        "code_ans": "----------\r\nNumber of Acai Berry Smoothies: 2.0\r\nNumber of Banana Chocolate Smoothies: 3.0\r\nMinimum Water Usage: 18.0\r\n"
+    },
+    {
+        "index": 3,
+        "question": "There are two ways to extract a metal from mined ores. The first way is to use process J and the second is process P. Process J can extract 5 units of metal using 8 units of water and produces 3 units of pollution. Process P can extract 9 units of metal using 6 units of water and produces 5 units of pollution. There can be at most 1500 units of water 1350 units of pollution. How many of each type of processes should be performed to maximize the amount of metal extracted?",
+        "answer": 2250,
+        "code_ans": "----------\r\nNumber of Process J: 0.0\r\nNumber of Process P: 250.0\r\nMaximized Metal Extracted: 2250.0\r\n"
+    },
+    {
+        "index": 15,
+        "question": "A bakery produces five types of cakes: C1, C2, C3, C4, and C5. They need to determine the quantities of each cake to produce. For C2, the revenue per unit is $40, the production time per unit is 2 hours, and the ingredient cost per unit is $15. For C3, the revenue per unit is $50, the production time per unit is 3 hours, and the ingredient cost per unit is $20. For C4, the revenue per unit is $60, the production time per unit is 4 hours, and the ingredient cost per unit is $25. For C5, the revenue per unit is $70, the production time per unit is 5 hours, and the ingredient cost per unit is $30. The bakery has a limited production line and can only produce one cake at a time. The bakery wants to maximize the profit efficiency (profit per hour of production time). The bakery has a limited production time of 80 hours. The bakery has a budget of $3000 for ingredient costs. The bakery has a production capacity of 200 units in terms of the number of units it can produce. Due to market demand, the bakery must produce at least 40 units in total. For C1, the revenue per unit is $30, the production time per unit is 1 hour, and the ingredient cost per unit is $10.",
+        "answer": 20,
+        "code_ans": "----------\r\nOptimal solution found.\r\nNumber of C1: 80.0\r\nNumber of C2: 0.0\r\nNumber of C3: 0.0\r\nNumber of C4: 0.0\r\nNumber of C5: 0.0\r\nTotal Profit: 1600.0\r\nTotal Production Time (hours): 80.0\r\nProfit Efficiency (profit per hour): 20.0\r\n"
+    },
+    {
+        "index": 18,
+        "question": "A telecommunications company installs internet service and TV service in buildings. Each internet service takes 60 minutes of wiring time and 10 minutes of box installation time. Each TV service takes 50 minutes of wiring time and 20 minutes of box installation time. The company has available 7000 minutes of wiring time and 4000 minutes of box installation time. If the profit per internet service installation is $100 and the profit per TV service installation is $120, how many of each should be installed to maximize profit?",
+        "answer": 16800,
+        "code_ans": "----------\r\nNumber of Internet Services: 0.0\r\nNumber of TV Services: 140.0\r\nMaximized Total Profit: $ 16800.0\r\n"
+    },
+    {
+        "index": 20,
+        "question": "Find the dimensions of the rectangle of largest area having fixed perimeter 100.",
+        "answer": 625,
+        "code_ans": "----------\r\nLength (x): 25.0\r\nWidth (y): 25.0\r\nMaximized Area: 625.0\r\n"
+    },
+    {
+        "index": 8,
+        "question": "Jacob has $3000 to invest. He has decided to invest in his favorite clothing company and his favorite tech company. He has decided that the money invested in his favorite clothing company must be at least four times as much as the amount invested in his favorite tech company. He has also limited himself to invest at most $500 in his favorite tech company. If the money invested in his favorite clothing company earns 7% and the money invested in his favorite tech company earns 10%, how much should he invest in each to maximize his profit?",
+        "answer": 225,
+        "code_ans": "----------\r\nClothing Investment: $ 2500.0\r\nTech Investment: $ 500.0\r\nMaximized Daily Profit: $ 225.0\r\n"
+    },
+    {
+        "index": 6,
+        "question": "A milk tea shop has 50000 ml of milk to make two milk teas: black milk tea and green milk tea. A bottle of black milk tea contains 300 ml of milk while a bottle of green milk tea has 200 ml of milk. The shop knows that they need to make at least three times the number of bottles of black milk tea than green milk tea. They also know that they need to make at least 10 bottles of green milk tea. Each bottle of black milk tea is sold for a profit of $2.5 and each bottle of green milk tea is sold for a profit of $7. How many of each type of milk tea needs to be made in order to maximize profit?",
+        "answer": 655,
+        "code_ans": "----------\r\nNumber of black milk tea bottles: 136.0\r\nNumber of green milk tea bottles: 45.0\r\nMaximized Daily Profit: $655.00\r\n"
+    },
+    {
+        "index": 17,
+        "question": "A chicken farmer has sold his chicken and they need to be transported either by bus or by car. A bus can take 100 chicken and takes 2 hours per trip. A car can take 40 chicken and takes 1.5 hours per trip. There can be at most 10 bus trips and at least 60% of the trips must be by car. If the farmer needs to transport 1200 chicken, how many trips of each should be done to minimize the total time needed to transport the chicken?",
+        "answer": 34.5,
+        "code_ans": "----------\r\nOptimal Solution Found\r\nNumber of Bus Trips: 6.0\r\nNumber of Car Trips: 15.0\r\nMinimum Total Time: 34.5\r\n"
+    },
+    {
+        "index": 4,
+        "question": "A rectangular garden is to be constructed using a rock wall as one side of the garden and wire fencing for the other three sides. Given 100ft of wire fencing, determine the dimensions that would create a garden of maximum area. What is the maximum area?",
+        "answer": 1250,
+        "code_ans": ""
+    },
+    {
+        "index": 14,
+        "question": "A man is trapped in a swamp at the location: (3/4,0). The swamp is a curve that y >= x^2, and x >= 0. The rescue team must stay as close to him as possible so that they can pass a rope to him. Find the BEST LOCATION of the rope required to rescue him.",
+        "answer": 0.35,
+        "code_ans": "Best location for the rope: (np.float64(0.5), np.float64(0.25))\r\nMinimum distance from the man: 0.3535533905932738\r\n"
+    },
+    {
+        "index": 2,
+        "question": "A logistics company is managing the distribution of three types of goods: GoodsX, GoodsY, and GoodsZ. The company needs to determine the number of trucks allocated to each type of goods and the number of trips per truck for each type of goods will make in the upcoming month. For ease of management, the number of trips per truck is the same for all trucks of the same type of goods. Additionally, the company wants to invest in fuel-efficient upgrades of trucks for each type of goods, which will reduce fuel costs per trip. The company has a total of 50 trucks available for the month. The total investment in fuel efficiency upgrades cannot exceed $60,000. Due to operational constraints, each truck can make no more than 20 trips in the month. The company must ensure that at least 10 trucks are allocated to GoodsX and 15 trucks to GoodsY. The fuel cost per trip for each type of goods decreases by $10 for every $10,000 invested in fuel efficiency upgrades for that type of goods. The initial fuel cost per trip for GoodsX is $200, for GoodsY is $250, and for GoodsZ is $300. The revenue generated per trip is $500 for GoodsX, $600 for GoodsY, and $700 for GoodsZ. The company aims to maximize the total profit from all goods.",
+        "answer": 395000,
+        "code_ans": ""
+    },
+    {
+        "index": 19,
+        "question": "A manufacturing company produces three types of electronic devices: smartphones, tablets, and laptops. The company has four different production lines, each with varying efficiency and capacity. On production line 1, each worker produces 10 smartphones, 5 tablets, and 3 laptops per hour. On production line 2, each worker produces 8 smartphones, 6 tablets, and 4 laptops per hour. On production line 3, each worker produces 6 smartphones, 7 tablets, and 5 laptops per hour. On production line 4, each worker produces 5 smartphones, 8 tablets, and 6 laptops per hour. The company needs to produce at least 1000 smartphones, 800 tablets, and 600 laptops daily. The production lines can only be operated or shut down at the same time. Determine the minimum number of hours needed to meet the daily demand. There are a total of 50 workers available. Each production line can be staffed by up to 20 workers at a time. The company wants to ensure that at least one production line is fully staffed (20 workers) if it is operational. Each production line has different productivity rates for each device.",
+        "answer": 2.69,
+        "code_ans": "----------\r\nThe problem could not be solved to optimality.\r\n"
+    }
+]

@@ -26,7 +26,7 @@ with open("data/aug_data_q2f2c.jsonl", "r", encoding="utf-8") as file:
         data = json.loads(line.strip())
         memorys.append(data)
 
-#memorys = memorys[0:10]
+memorys = memorys[0:20]
 
 #print(memorys[0])
 
@@ -90,6 +90,13 @@ implementation = memory_system.get_clusters(cluster_type="implementation")
 print("Implementation Clusters:")
 print(len(implementation["implementation"]))
 print(implementation["implementation"].keys())
+
+models = memory_system.search("vehicle routing problem", k=10, cluster_type="model")
+print("Model Search Results for 'vehicle routing problem':")
+print(models)
+codes = memory_system.search("vehicle routing problem", k=10, cluster_type="implementation")
+print("Code Search Results for 'vehicle routing problem':")
+print(codes)
 
 # questions = "A man on a strict diet only drinks meal replacement drinks from two brands, alpha and omega. The alpha brand drink contains 30 grams of protein, 20 grams of sugar, and 350 calories per bottle. The omega brand drink contains 20 grams of protein, 15 grams of sugar, and 300 calories per bottle. The man wants to get at least 100 grams of protein and 2000 calories. In addition, because the omega brand drink contains tiny amounts of caffeine, at most 35% of the drink should be omega brand. How many bottles of each should he drink to minimize his sugar intake?"
 
